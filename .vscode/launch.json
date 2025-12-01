@@ -8,11 +8,6 @@
       "type": "mix_task",
       "name": "AdventCode2025 CLI",
       "request": "launch",
-      "task": "run",
-      "taskArgs": [
-        "-e",
-        "AdventCode2025.CLI.main()"
-      ],
       "projectDir": "${workspaceRoot}"
     },
     {

@@ -75,7 +75,7 @@ defmodule AdventCode2025.CLI do
   Run a registered day's `run/0` function.
 
   Looks for module `AdventCode2025.DayN` and calls `run/0` if exported.
-  Returns `{:ok, result}` or `{:error, reason}` and prints messages to stdout.
+  Returns the day's result on success (and prints it), or an error tuple on failure.
   """
   def run_day(day) when is_integer(day) do
     module = Module.concat(AdventCode2025, "Day#{day}")
@@ -84,7 +84,7 @@ defmodule AdventCode2025.CLI do
       try do
         result = apply(module, :run, [])
         IO.puts("Day #{day} result:\n#{inspect(result)}")
-        {:ok, result}
+        result
       rescue
         e ->
           IO.puts("Day #{day} runner raised: #{Exception.format(:error, e, __STACKTRACE__)}")

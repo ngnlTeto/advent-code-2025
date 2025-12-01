@@ -1,8 +1,7 @@
 defmodule AdventCode2025Test do
   use ExUnit.Case
-  doctest AdventCode2025
 
-  test "greets the world" do
-    assert AdventCode2025.hello() == :world
+  test "day 1" do
+    assert AdventCode2025.CLI.main(["1"]) == %{task1: 1081, task2: 6689}
   end
 end
