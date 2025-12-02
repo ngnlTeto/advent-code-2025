@@ -10,18 +10,18 @@ defmodule AdventCode2025.Day2 do
     input
     |> String.trim()
     |> String.split(",", trim: true)
-    |> Enum.map(fn line ->
-      String.split(line, "-")
-      |> Enum.map(&String.to_integer/1)
-      |> List.to_tuple()
-    end)
+    |> Enum.map(&parseEntry/1)
+  end
+
+  defp parseEntry(entry) do
+    entry |> String.split("-") |> Enum.map(&String.to_integer/1) |> List.to_tuple()
   end
 
   defp run_part1(ranges) do
     invalidIds =
       ranges
-      |> Enum.flat_map(fn range ->
-        Enum.to_list(elem(range, 0)..elem(range, 1))
+      |> Enum.flat_map(fn {from, to} ->
+        Enum.to_list(from..to)
         |> Enum.filter(&Regex.match?(~r/^(\d+)\1$/, Integer.to_string(&1)))
       end)
 
@@ -31,8 +31,8 @@ defmodule AdventCode2025.Day2 do
   defp run_part2(ranges) do
     invalidIds =
       ranges
-      |> Enum.flat_map(fn range ->
-        Enum.to_list(elem(range, 0)..elem(range, 1))
+      |> Enum.flat_map(fn {from, to} ->
+        Enum.to_list(from..to)
         |> Enum.filter(&Regex.match?(~r/^(\d+)\1+$/, Integer.to_string(&1)))
       end)
 
