@@ -26,23 +26,15 @@ defmodule AdventCode2025.CLI do
   defp prompt_and_run do
     IO.puts("Advent of Code 2025 - Runner")
     max = AdventCode2025.Config.max_day()
-    day_str = IO.gets("Enter day number to run (1..#{max}): ")
+    day_str = IO.gets("Enter day number to run (1..#{max}): ") |> String.trim()
 
-    case day_str do
-      nil ->
-        IO.puts("No input, exiting.")
+    case parse_day(day_str) do
+      {:ok, day} ->
+        run_day(day)
 
-      raw ->
-        raw = String.trim(raw)
-
-        case parse_day(raw) do
-          {:ok, day} ->
-            run_day(day)
-
-          {:error, reason} ->
-            IO.puts("Invalid day: #{reason}")
-            prompt_and_run()
-        end
+      {:error, reason} ->
+        IO.puts("Invalid day: #{reason}")
+        prompt_and_run()
     end
   end
 
@@ -91,7 +83,10 @@ defmodule AdventCode2025.CLI do
           {:error, {:raised, e}}
       end
     else
-      IO.puts("No implementation found for Day #{day}. Create `lib/advent_code2025/day#{day}.ex` with `def run/0`.")
+      IO.puts(
+        "No implementation found for Day #{day}. Create `lib/advent_code2025/day#{day}.ex` with `def run/0`."
+      )
+
       {:error, :not_implemented}
     end
   end
