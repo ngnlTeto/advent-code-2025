@@ -31,9 +31,8 @@ defmodule AdventCode2025.Day3 do
 
   defp calculateBankEnergy(bank, batteryCount) do
     findNextBattery(bank, 0, batteryCount)
-    |> Enum.map(fn i -> Enum.at(bank, i) |> Integer.to_string() end)
-    |> Enum.join()
-    |> String.to_integer()
+    |> Enum.map(&Enum.at(bank, &1))
+    |> Enum.reduce(0, fn v, acc -> acc * 10 + v end)
   end
 
   defp findNextBattery(bank, start, remainder) do
