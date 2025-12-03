@@ -32,11 +32,7 @@ defmodule AdventCode2025.Day3 do
   defp calculateBankEnergy(bank, batteryCount) do
     indices =
       Enum.reduce(1..batteryCount, [], fn _, indices ->
-        start =
-          if Enum.empty?(indices),
-            do: 0,
-            else: List.last(indices) + 1
-
+        start = List.last(indices, -1) + 1
         ending = length(bank) - batteryCount + length(indices)
 
         index =
