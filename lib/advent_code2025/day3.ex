@@ -30,24 +30,27 @@ defmodule AdventCode2025.Day3 do
   end
 
   defp calculateBankEnergy(bank, batteryCount) do
-    indices =
-      Enum.reduce(1..batteryCount, [], fn _, indices ->
-        start = List.last(indices, -1) + 1
-        ending = length(bank) - batteryCount + length(indices)
-
-        index =
-          bank
-          |> Enum.slice(start..ending)
-          |> indexOfMax()
-          |> Kernel.+(start)
-
-        indices ++ [index]
-      end)
-
-    indices
+    findNextBattery(bank, 0, batteryCount)
     |> Enum.map(fn i -> Enum.at(bank, i) |> Integer.to_string() end)
     |> Enum.join()
     |> String.to_integer()
+  end
+
+  defp findNextBattery(bank, start, remainder) do
+    last = length(bank) - remainder
+
+    index =
+      bank
+      |> Enum.slice(start..last)
+      |> indexOfMax()
+      |> Kernel.+(start)
+
+    if remainder == 1 do
+      [index]
+    else
+      restBatteries = findNextBattery(bank, index + 1, remainder - 1)
+      [index | restBatteries]
+    end
   end
 
   defp indexOfMax(list) do
