@@ -31,7 +31,7 @@ defmodule AdventCode2025.Day3 do
 
   defp calculateBankEnergy(bank, batteryCount) do
     indices =
-      Enum.reduce_while(bank, [], fn _, indices ->
+      Enum.reduce(1..batteryCount, [], fn _, indices ->
         start =
           if Enum.empty?(indices),
             do: 0,
@@ -45,10 +45,7 @@ defmodule AdventCode2025.Day3 do
           |> indexOfMax()
           |> Kernel.+(start)
 
-        {
-          if(length(indices) + 1 == batteryCount, do: :halt, else: :cont),
-          indices ++ [index]
-        }
+        indices ++ [index]
       end)
 
     indices
