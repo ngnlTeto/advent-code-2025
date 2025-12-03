@@ -56,14 +56,11 @@ defmodule AdventCode2025.Day3 do
   end
 
   defp indexOfMax(list) do
-    list
-    |> Enum.with_index()
-    |> Enum.reduce(0, fn {value, index}, currentMax ->
-      if value > Enum.at(list, currentMax) do
-        index
-      else
-        currentMax
-      end
-    end)
+    {_, maxIndex} =
+      list
+      |> Enum.with_index()
+      |> Enum.max_by(fn {value, _index} -> value end)
+
+    maxIndex
   end
 end
