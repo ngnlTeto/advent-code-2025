@@ -12,10 +12,10 @@ defmodule AdventCode2025.Day4 do
     |> String.trim()
     |> String.split("\n", trim: true)
     |> Enum.map(&String.graphemes/1)
-    |> getRolls()
+    |> get_rolls()
   end
 
-  defp getRolls(matrix) do
+  defp get_rolls(matrix) do
     matrix
     |> Enum.with_index()
     |> Enum.reduce(MapSet.new(), fn {row, indexY}, acc ->
@@ -39,19 +39,18 @@ defmodule AdventCode2025.Day4 do
 
   defp run_part2(rolls) do
     rollCount = MapSet.size(rolls)
-    rollsLeftCount = removeAllForkliftableRolls(rolls) |> MapSet.size()
+    rollsLeftCount = remove_all_forkliftable_rolls(rolls) |> MapSet.size()
     rollCount - rollsLeftCount
   end
 
-  defp removeAllForkliftableRolls(rolls) do
+  defp remove_all_forkliftable_rolls(rolls) do
     removedRolls = MapSet.filter(rolls, &forkliftable(rolls, &1))
-
     rollsLeft = MapSet.difference(rolls, removedRolls)
 
-    if rollsLeft == rolls do
+    if MapSet.size(removedRolls) == 0 do
       rolls
     else
-      removeAllForkliftableRolls(rollsLeft)
+      remove_all_forkliftable_rolls(rollsLeft)
     end
   end
 

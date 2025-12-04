@@ -5,21 +5,21 @@ defmodule AdventCode2025.Day2 do
 
   def run do
     ranges = File.read!(@input_file) |> parse
-    %{task1: filterBadIds(ranges, @task1_regex), task2: filterBadIds(ranges, @task2_regex)}
+    %{task1: filter_bad_ids(ranges, @task1_regex), task2: filter_bad_ids(ranges, @task2_regex)}
   end
 
   defp parse(input) do
     input
     |> String.trim()
     |> String.split(",", trim: true)
-    |> Enum.map(&parseEntry/1)
+    |> Enum.map(&parse_entry/1)
   end
 
-  defp parseEntry(entry) do
+  defp parse_entry(entry) do
     entry |> String.split("-") |> Enum.map(&String.to_integer/1) |> List.to_tuple()
   end
 
-  defp filterBadIds(ranges, pattern) do
+  defp filter_bad_ids(ranges, pattern) do
     invalidIds =
       ranges
       |> Enum.flat_map(fn {from, to} ->
