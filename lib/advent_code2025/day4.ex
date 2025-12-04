@@ -48,7 +48,7 @@ defmodule AdventCode2025.Day4 do
 
     rollsLeft = MapSet.difference(rolls, removedRolls)
 
-    if MapSet.size(rollsLeft) == MapSet.size(rolls) do
+    if rollsLeft == rolls do
       rolls
     else
       removeAllForkliftableRolls(rollsLeft)
