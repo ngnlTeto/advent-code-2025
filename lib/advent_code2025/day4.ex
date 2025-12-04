@@ -33,7 +33,7 @@ defmodule AdventCode2025.Day4 do
 
   defp run_part1(rolls) do
     rolls
-    |> removeForkliftableRolls()
+    |> MapSet.filter(&forkliftable(rolls, &1))
     |> MapSet.size()
   end
 
@@ -44,7 +44,7 @@ defmodule AdventCode2025.Day4 do
   end
 
   defp removeAllForkliftableRolls(rolls) do
-    removedRolls = removeForkliftableRolls(rolls)
+    removedRolls = MapSet.filter(rolls, &forkliftable(rolls, &1))
 
     rollsLeft = MapSet.difference(rolls, removedRolls)
 
@@ -53,11 +53,6 @@ defmodule AdventCode2025.Day4 do
     else
       removeAllForkliftableRolls(rollsLeft)
     end
-  end
-
-  defp removeForkliftableRolls(rolls) do
-    rolls
-    |> MapSet.filter(&forkliftable(rolls, &1))
   end
 
   defp forkliftable(rolls, {x, y}) do
