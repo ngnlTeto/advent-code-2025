@@ -1,10 +1,6 @@
 defmodule AdventCode2025.CLI do
   @moduledoc """
   Simple CLI for running Advent of Code 2025 day runners.
-
-  Usage:
-    - Interactive: `mix run -e "AdventCode2025.CLI.main()"`
-    - Direct: `mix run -e "AdventCode2025.CLI.main(["1"])"` or build escript
   """
 
   @doc """

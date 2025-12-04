@@ -2,6 +2,11 @@
 
 **TODO: Add description**
 
+## Usage
+
+- Interactive: `mix run -e "AdventCode2025.CLI.main()"`
+- Direct: `mix run -e "AdventCode2025.CLI.main(["1"])"` or build escript
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
@@ -18,4 +23,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/advent_code_2025>.
-
