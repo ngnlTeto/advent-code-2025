@@ -50,6 +50,7 @@ defmodule AdventCode2025.Day5 do
     |> Enum.sum()
   end
 
+  defp merge_ranges(ranges) when length(ranges) == 1, do: Enum.at(ranges, 0)
   defp merge_ranges(ranges) do
     min =
       ranges
