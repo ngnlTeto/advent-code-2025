@@ -20,4 +20,9 @@ defmodule AdventCode2025Test do
   test "day 5" do
     assert AdventCode2025.CLI.main(["5"]) == %{task1: 758, task2: 343_143_696_885_053}
   end
+
+  test "day 6" do
+    assert AdventCode2025.CLI.main(["6"]) == %{task1: 5322004718681, task2: 9876636978528}
+  end
+
 end

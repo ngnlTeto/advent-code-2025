@@ -1,3 +1,5 @@
+# Still needs optimizations
+
 defmodule AdventCode2025.Day6 do
   @input_file Path.join(__DIR__, "../../inputs/day6.txt")
   def run do
@@ -26,7 +28,8 @@ defmodule AdventCode2025.Day6 do
         task_lines =
           number_lines
           |> Enum.map(&String.slice(&1, range))
-          |>Enum.reverse() # this reverse killed me https://tenor.com/bmGGR.gif
+          # this reverse killed me https://tenor.com/bmGGR.gif
+          |> Enum.reverse()
 
         new_tasks = tasks ++ [%{task: task_lines, operator: String.trim(operator_match)}]
 
@@ -55,9 +58,6 @@ defmodule AdventCode2025.Day6 do
 
         %{task: task_lines, operator: p.operator}
       end)
-
-    IO.inspect(problems)
-    IO.inspect(new_problems)
 
     new_problems
     |> Enum.map(&solve/1)
