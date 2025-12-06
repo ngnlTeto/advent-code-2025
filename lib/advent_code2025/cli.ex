@@ -6,7 +6,7 @@ defmodule AdventCode2025.CLI do
   @max_days 12
 
   @doc """
-  Entry point for escript or mix run. Accepts `argv` (list of strings) or none.
+  Entry point for escript or mix run. Accepts `arg` int or none.
   """
   def main(arg \\ nil) do
     case arg do
