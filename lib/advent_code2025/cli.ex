@@ -3,61 +3,36 @@ defmodule AdventCode2025.CLI do
   Simple CLI for running Advent of Code 2025 day runners.
   """
 
+  @max_days 12
+
   @doc """
   Entry point for escript or mix run. Accepts `argv` (list of strings) or none.
   """
-  def main(argv \\ []) do
-    case argv do
-      [day_str | _] ->
-        case parse_day(day_str) do
-          {:ok, day} -> run_day(day)
-          {:error, reason} -> IO.puts("Invalid day: #{reason}")
-        end
-
-      [] ->
-        prompt_and_run()
+  def main(arg \\ nil) do
+    case arg do
+      day when day in 1..@max_days -> run_day(day)
+      int when is_integer(int) -> {:error, "#{int} is out of range (1..#{@max_days})"}
+      nil -> prompt_and_run()
+      no_day -> IO.puts("Invalid day: #{no_day}")
     end
   end
 
   defp prompt_and_run do
     IO.puts("Advent of Code 2025 - Runner")
-    max = AdventCode2025.Config.max_day()
-    day_str = IO.gets("Enter day number to run (1..#{max}): ") |> String.trim()
+    day_str = IO.gets("Enter day number to run (1..#{@max_days}): ") |> String.trim()
 
-    case parse_day(day_str) do
-      {:ok, day} ->
+    case Integer.parse(day_str) do
+      {day, _} when day in 1..@max_days ->
         run_day(day)
 
-      {:error, reason} ->
-        IO.puts("Invalid day: #{reason}")
+      {_, _} ->
+        IO.puts("Invalid day: Not in range")
+
+      :error ->
+        IO.puts("Invalid day: Not parseable to integer")
         prompt_and_run()
     end
   end
-
-  @doc """
-  Parse a day from string/integer input.
-  """
-  def parse_day(day) when is_integer(day) do
-    max = AdventCode2025.Config.max_day()
-
-    if day >= 1 and day <= max do
-      {:ok, day}
-    else
-      {:error, "#{day} is out of range (1..#{max})"}
-    end
-  end
-
-  def parse_day(day_str) when is_binary(day_str) do
-    max = AdventCode2025.Config.max_day()
-
-    case Integer.parse(day_str) do
-      {n, _} when n >= 1 and n <= max -> {:ok, n}
-      {n, _} -> {:error, "#{n} is out of range (1..#{max})"}
-      :error -> {:error, "not a number"}
-    end
-  end
-
-  def parse_day(_), do: {:error, "invalid input"}
 
   @doc """
   Run a registered day's `run/0` function.
@@ -86,6 +61,4 @@ defmodule AdventCode2025.CLI do
       {:error, :not_implemented}
     end
   end
-
-  def run_day(other), do: {:error, {:invalid_day, other}}
 end
