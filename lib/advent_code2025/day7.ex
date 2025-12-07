@@ -56,6 +56,8 @@ defmodule AdventCode2025.Day7 do
     |> Enum.min_by(&elem(&1, 1), fn -> nil end)
   end
 
+  defp calc_timelines(splitter_map, solved_map) when map_size(splitter_map) == 0, do: solved_map
+
   defp calc_timelines(splitter_map, solved_map) do
     solveable_map =
       Map.filter(splitter_map, fn {_pos, {left, rigth}} ->
@@ -71,11 +73,7 @@ defmodule AdventCode2025.Day7 do
       |> Map.new()
       |> Map.merge(solved_map)
 
-    if map_size(splitter_map) == 0 do
-      solved_map
-    else
-      cleaned_splitter_map = Map.drop(splitter_map, Map.keys(solveable_map))
-      calc_timelines(cleaned_splitter_map, new_solved_map)
-    end
+    cleaned_splitter_map = Map.drop(splitter_map, Map.keys(solveable_map))
+    calc_timelines(cleaned_splitter_map, new_solved_map)
   end
 end

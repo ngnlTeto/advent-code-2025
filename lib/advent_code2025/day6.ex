@@ -71,8 +71,8 @@ defmodule AdventCode2025.Day6 do
       |> Enum.map(&String.to_integer/1)
 
     case problem.operator do
-      "+" -> numbers |> join(&Kernel.+/2)
-      "*" -> numbers |> join(&Kernel.*/2)
+      "+" -> numbers |> Enum.reduce(&Kernel.+/2)
+      "*" -> numbers |> Enum.reduce(&Kernel.*/2)
     end
   end
 
@@ -80,9 +80,5 @@ defmodule AdventCode2025.Day6 do
     enum
     |> Enum.zip()
     |> Enum.map(&Tuple.to_list/1)
-  end
-
-  defp join(enum, func) do
-    Enum.reduce(enum, &func.(&1, &2))
   end
 end
