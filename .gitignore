@@ -27,3 +27,6 @@ advent_code_2025-*.tar
 
 # Escript build artifact
 /advent_code_2025
+
+# Template file
+/lib/advent_code2025/day0.ex

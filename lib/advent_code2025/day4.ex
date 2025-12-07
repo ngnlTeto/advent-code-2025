@@ -1,4 +1,6 @@
 defmodule AdventCode2025.Day4 do
+  require AdventCode2025.Util
+
   @input_file Path.join(__DIR__, "../../inputs/day4.txt")
   @relative_moves [{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}]
 
@@ -12,23 +14,7 @@ defmodule AdventCode2025.Day4 do
     |> String.trim()
     |> String.split("\n", trim: true)
     |> Enum.map(&String.graphemes/1)
-    |> get_rolls()
-  end
-
-  defp get_rolls(matrix) do
-    matrix
-    |> Enum.with_index()
-    |> Enum.reduce(MapSet.new(), fn {row, indexY}, acc ->
-      row
-      |> Enum.with_index()
-      |> Enum.reduce(acc, fn {value, indexX}, acc2 ->
-        if value == "@" do
-          MapSet.put(acc2, {indexX, indexY})
-        else
-          acc2
-        end
-      end)
-    end)
+    |> AdventCode2025.Util.get_char_pos_from_matrix("@")
   end
 
   defp run_part1(rolls) do
