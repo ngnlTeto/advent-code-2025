@@ -58,8 +58,7 @@ defmodule AdventCode2025.Day7 do
 
   defp calc_timelines(splitter_map, solved_map) do
     solveable_map =
-      splitter_map
-      |> Map.filter(fn {_pos, {left, rigth}} ->
+      Map.filter(splitter_map, fn {_pos, {left, rigth}} ->
         Map.has_key?(solved_map, left) && Map.has_key?(solved_map, rigth)
       end)
 
