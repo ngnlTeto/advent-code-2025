@@ -1,7 +1,7 @@
 defmodule AdventCode2025.Day7 do
   require AdventCode2025.Util
 
-  @input_file Path.join(__DIR__, "../../inputs/day7.test.txt")
+  @input_file Path.join(__DIR__, "../../inputs/day7.txt")
 
   def run do
     input = File.read!(@input_file) |> parse
@@ -18,25 +18,20 @@ defmodule AdventCode2025.Day7 do
     splitter = AdventCode2025.Util.get_char_pos_from_matrix(graphems, "^")
     [tachyon] = AdventCode2025.Util.get_char_pos_from_matrix(graphems, "S") |> MapSet.to_list()
 
-    {splitter, tachyon, Enum.count(graphems)}
+    {splitter, tachyon}
   end
 
-  defp run_part1({splitter, tachyon, height}) do
-    {tachyon_x, _} = tachyon
-    beam = MapSet.new([tachyon_x])
-    calc_beam(splitter, beam, 1, height - 1)
+  defp run_part1({splitter, tachyon}) do
+    pos = find_next_splitter(tachyon, splitter)
+    splitter_map = gen_splitter_map(Map.new(), pos, splitter)
+    map_size(splitter_map)
   end
 
-  defp run_part2({splitter, tachyon, _}) do
-    first_pos =
-      splitter
-      |> MapSet.filter(fn s -> elem(s, 0) == elem(tachyon, 0) end)
-      |> MapSet.to_list()
-      |> Enum.min_by(&elem(&1, 1))
-
-    splitter_map = gen_splitter_map(Map.new(), first_pos, splitter)
-
-    splitter_map
+  defp run_part2({splitter, tachyon}) do
+    pos = find_next_splitter(tachyon, splitter)
+    splitter_map = gen_splitter_map(Map.new(), pos, splitter)
+    timelines_map = calc_timelines(splitter_map, Map.new([{nil, 1}]))
+    Map.get(timelines_map, pos)
   end
 
   defp gen_splitter_map(known_nodes, pos, _) when pos == nil, do: known_nodes
@@ -61,35 +56,27 @@ defmodule AdventCode2025.Day7 do
     |> Enum.min_by(&elem(&1, 1), fn -> nil end)
   end
 
-  defp calc_beam(splitter, beams, level, height) do
-    cur_level_splitter =
-      splitter
-      |> MapSet.filter(fn s -> elem(s, 1) == level end)
-      |> MapSet.to_list()
-      |> Enum.map(&elem(&1, 0))
-      |> MapSet.new()
-
-    {new_beams, split_count} =
-      cur_level_splitter
-      |> Enum.reduce({beams, 0}, fn splitter, {beams, split_count} ->
-        if MapSet.member?(beams, splitter) do
-          new_beams =
-            beams
-            |> MapSet.delete(splitter)
-            |> MapSet.put(splitter - 1)
-            |> MapSet.put(splitter + 1)
-
-          {new_beams, split_count + 1}
-        else
-          {beams, split_count}
-        end
+  defp calc_timelines(splitter_map, solved_map) do
+    solveable_map =
+      splitter_map
+      |> Map.filter(fn {_pos, {left, rigth}} ->
+        Map.has_key?(solved_map, left) && Map.has_key?(solved_map, rigth)
       end)
 
-    if level == height do
-      split_count
+    new_solved_map =
+      solveable_map
+      |> Map.to_list()
+      |> Enum.map(fn {pos, {left, rigth}} ->
+        {pos, Map.get(solved_map, left) + Map.get(solved_map, rigth)}
+      end)
+      |> Map.new()
+      |> Map.merge(solved_map)
+
+    if map_size(splitter_map) == 0 do
+      solved_map
     else
-      other_splits = calc_beam(splitter, new_beams, level + 1, height)
-      split_count + other_splits
+      cleaned_splitter_map = Map.drop(splitter_map, Map.keys(solveable_map))
+      calc_timelines(cleaned_splitter_map, new_solved_map)
     end
   end
 end
