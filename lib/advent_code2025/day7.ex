@@ -34,47 +34,31 @@ defmodule AdventCode2025.Day7 do
       |> MapSet.to_list()
       |> Enum.min_by(&elem(&1, 1))
 
-    base_node = gen_splitter_tree(first_pos, splitter)
+    splitter_map = gen_splitter_map(Map.new(), first_pos, splitter)
 
-    IO.inspect(base_node, limit: :infinity)
-
-    base_node
+    splitter_map
   end
 
-  defp gen_splitter_tree(pos, splitter) do
-    next_splitter = find_next_splitter(pos, splitter)
+  defp gen_splitter_map(known_nodes, pos, _) when pos == nil, do: known_nodes
+  defp gen_splitter_map(known_nodes, pos, _) when is_map_key(known_nodes, pos), do: known_nodes
 
-    nodes =
-      next_splitter
-      |> Enum.map(&gen_splitter_tree(&1, splitter))
+  defp gen_splitter_map(known_nodes, pos, splitter) do
+    left = find_next_splitter({elem(pos, 0) - 1, elem(pos, 1)}, splitter)
+    rigth = find_next_splitter({elem(pos, 0) + 1, elem(pos, 1)}, splitter)
 
-    %{pos: pos, childs: MapSet.new(nodes)}
+    known_nodes
+    |> Map.put(pos, {left, rigth})
+    |> gen_splitter_map(left, splitter)
+    |> gen_splitter_map(rigth, splitter)
   end
 
   defp find_next_splitter(pos, splitter) do
-    left_splitter =
-      splitter
-      |> MapSet.filter(fn s -> elem(pos, 0) - 1 == elem(s, 0) end)
-      |> MapSet.filter(fn s -> elem(pos, 1) < elem(s, 1) end)
-      |> MapSet.to_list()
-
-    left =
-      if Enum.empty?(left_splitter),
-        do: [],
-        else: [Enum.min_by(left_splitter, &elem(&1, 1))]
-
-    right_splitter =
-      splitter
-      |> MapSet.filter(fn s -> elem(pos, 0) + 1 == elem(s, 0) end)
-      |> MapSet.filter(fn s -> elem(pos, 1) < elem(s, 1) end)
-      |> MapSet.to_list()
-
-    right =
-      if Enum.empty?(right_splitter),
-        do: [],
-        else: [Enum.min_by(right_splitter, &elem(&1, 1))]
-
-    left ++ right
+    splitter
+    |> MapSet.filter(fn s ->
+      elem(pos, 0) == elem(s, 0) && elem(pos, 1) < elem(s, 1)
+    end)
+    |> MapSet.to_list()
+    |> Enum.min_by(&elem(&1, 1), fn -> nil end)
   end
 
   defp calc_beam(splitter, beams, level, height) do
